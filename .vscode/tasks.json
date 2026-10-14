@@ -1,0 +1,11 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Update database-free dependencies",
+			"type": "shell",
+			"command": "Set-Location next-learn-dashboard; pnpm remove @vercel/postgres postgres; if ($LASTEXITCODE -eq 0) { pnpm add next-auth@beta zod@^3 use-debounce@^10 }",
+			"isBackground": false
+		}
+	]
+}

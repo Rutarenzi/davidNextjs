@@ -1,36 +1,88 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Next.js Dashboard
 
-## Getting Started
+This is a Next.js 14 App Router dashboard using typed local sample data. It does
+not require a database or database credentials.
 
-First, run the development server:
+## Start the App
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+If you opened the parent `davidNextjs` workspace, first enter the app folder:
+
+```powershell
+cd .\next-learn-dashboard
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Install packages and prepare the local environment file:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```powershell
+pnpm install
+if (!(Test-Path .env.local)) { Copy-Item .env.example .env.local }
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Set `AUTH_SECRET` in `.env.local` to a random value, then start the development
+server:
 
-## Learn More
+```powershell
+pnpm dev
+```
 
-To learn more about Next.js, take a look at the following resources:
+Open the `Local` URL printed by Next.js, normally <http://localhost:3000>. If
+that port is already in use, Next.js selects another available port and prints
+its URL. Keep the terminal running while using the app; press `Ctrl+C` there to
+stop the server.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Sign In
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Open `/` and select **Login**, or visit `/login` directly. In development, use
+any valid email address and a password with at least six characters. This is a
+development-only mock sign-in; it does not check or store passwords. Signed-out
+visits to dashboard routes redirect to the login page.
 
-## Deploy on Vercel
+Production sign-in is intentionally disabled until a real identity provider and
+persistent user store are configured. Do not deploy the mock login as real
+authentication.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Navigate the Dashboard
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+The dashboard sidebar links to these sections:
+
+| Page      | Route                  | What it contains                                                         |
+| --------- | ---------------------- | ------------------------------------------------------------------------ |
+| Home      | `/dashboard`           | Summary cards, revenue chart, and latest invoices                        |
+| Invoices  | `/dashboard/invoices`  | Searchable, paginated invoice list with create, edit, and delete actions |
+| Customers | `/dashboard/customers` | Customer totals derived from the local invoices                          |
+
+Invoice forms are available at `/dashboard/invoices/create` and
+`/dashboard/invoices/[id]/edit`. The root route `/` is a landing page; its Login
+link enters the protected dashboard flow.
+
+## Project Layout
+
+- `app/dashboard/` contains the dashboard, customer, and invoice routes.
+- `app/ui/` contains the reusable page, navigation, form, and table components.
+- `app/lib/placeholder-data.ts` contains typed sample customers, invoices, and revenue.
+- `app/lib/data.ts` provides shared reads, filtering, pagination, summaries, and in-memory invoice mutations.
+- `app/lib/actions.ts` validates and handles invoice form submissions.
+- `auth.ts`, `auth.config.ts`, and `middleware.ts` implement the development login and protect dashboard routes.
+
+## Data and Persistence
+
+Invoice changes are kept in an in-memory server store. They are visible during
+the current server process, but can be lost after a restart and are not shared
+between multiple server instances. The original placeholder data is restored
+when the store is initialized again. No passwords or credentials are included
+in the sample data.
+
+## Project Commands
+
+Run these from `next-learn-dashboard`:
+
+```powershell
+pnpm dev
+pnpm lint
+pnpm exec tsc --noEmit
+pnpm build
+pnpm start
+```
+
+`pnpm start` serves the production build, so run `pnpm build` first. The current
+production authentication intentionally rejects the development mock login.
