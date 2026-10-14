@@ -9,6 +9,14 @@ export type Customer = {
   image_url: string;
 };
 
+export type User = {
+  id: string;
+  name: string;
+  email: string;
+  role: 'admin' | 'viewer';
+  image_url?: string;
+};
+
 export type Invoice = {
   id: string;
   customer_id: string;
@@ -22,6 +30,14 @@ export type Invoice = {
 export type Revenue = {
   month: string;
   revenue: number;
+};
+
+export type DashboardStats = {
+  totalCustomers: number;
+  totalInvoices: number;
+  totalPaidInvoices: number;
+  totalPendingInvoices: number;
+  totalRevenue: number;
 };
 
 export type CustomerField = Pick<Customer, 'id' | 'name'>;

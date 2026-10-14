@@ -1,6 +1,12 @@
 import type { NextAuthConfig } from 'next-auth';
 
 export const authConfig = {
+  secret:
+    process.env.AUTH_SECRET ||
+    process.env.NEXTAUTH_SECRET ||
+    (process.env.NODE_ENV === 'development'
+      ? 'local-development-only-authjs-secret-do-not-use-in-production'
+      : undefined),
   pages: {
     signIn: '/login',
   },

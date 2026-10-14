@@ -36,6 +36,10 @@ export default function LoginForm() {
         <h1 className={`${lusitana.className} mb-3 text-2xl`}>
           Please log in to continue.
         </h1>
+        <p className="mb-4 text-sm text-gray-600">
+          Demo login: <span className="font-medium">demo@acme.com</span> /{' '}
+          <span className="font-medium">demo123</span>
+        </p>
         <div className="w-full">
           <div>
             <label

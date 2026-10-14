@@ -1,4 +1,4 @@
-import type { Customer, Invoice, Revenue } from './definitions';
+import type { Customer, DashboardStats, Invoice, Revenue, User } from './definitions';
 
 export const customers: Customer[] = [
   {
@@ -36,6 +36,23 @@ export const customers: Customer[] = [
     name: 'Balazs Orban',
     email: 'balazs.orban@example.com',
     image_url: '/customers/balazs-orban.png',
+  },
+];
+
+export const users: User[] = [
+  {
+    id: 'user-demo-admin',
+    name: 'Demo Admin',
+    email: 'demo@acme.com',
+    role: 'admin',
+    image_url: '/customers/amy-burns.png',
+  },
+  {
+    id: 'user-demo-viewer',
+    name: 'Demo Viewer',
+    email: 'viewer@acme.com',
+    role: 'viewer',
+    image_url: '/customers/evil-rabbit.png',
   },
 ];
 
@@ -147,3 +164,11 @@ export const revenue: Revenue[] = [
   { month: 'Nov', revenue: 3000 },
   { month: 'Dec', revenue: 4800 },
 ];
+
+export const dashboardStats: DashboardStats = {
+  totalCustomers: customers.length,
+  totalInvoices: invoices.length,
+  totalPaidInvoices: invoices.filter((invoice) => invoice.status === 'paid').length,
+  totalPendingInvoices: invoices.filter((invoice) => invoice.status === 'pending').length,
+  totalRevenue: revenue.reduce((sum, month) => sum + month.revenue, 0),
+};
