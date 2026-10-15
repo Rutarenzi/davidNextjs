@@ -1,0 +1,174 @@
+import type { Customer, DashboardStats, Invoice, Revenue, User } from './definitions';
+
+export const customers: Customer[] = [
+  {
+    id: 'd6e15727-9fe1-4961-8c5b-ea44a9bd81aa',
+    name: 'Evil Rabbit',
+    email: 'evil@rabbit.com',
+    image_url: '/customers/evil-rabbit.png',
+  },
+  {
+    id: '3958dc9e-712f-4377-85e9-fec4b6a6442a',
+    name: 'Delba de Oliveira',
+    email: 'delba@oliveira.com',
+    image_url: '/customers/delba-de-oliveira.png',
+  },
+  {
+    id: '3958dc9e-742f-4377-85e9-fec4b6a6442a',
+    name: 'Lee Robinson',
+    email: 'lee@robinson.com',
+    image_url: '/customers/lee-robinson.png',
+  },
+  {
+    id: '76d65c26-f784-44a2-ac19-586678f7c2f2',
+    name: 'Michael Novotny',
+    email: 'michael@novotny.com',
+    image_url: '/customers/michael-novotny.png',
+  },
+  {
+    id: 'cc27c14a-0acf-4f4a-a6c9-d45682c144b9',
+    name: 'Amy Burns',
+    email: 'amy@burns.com',
+    image_url: '/customers/amy-burns.png',
+  },
+  {
+    id: '13d07535-c59e-4157-a011-f8d2ef4e0cbb',
+    name: 'Balazs Orban',
+    email: 'balazs.orban@example.com',
+    image_url: '/customers/balazs-orban.png',
+  },
+];
+
+export const users: User[] = [
+  {
+    id: 'user-demo-admin',
+    name: 'Demo Admin',
+    email: 'demo@acme.com',
+    role: 'admin',
+    image_url: '/customers/amy-burns.png',
+  },
+  {
+    id: 'user-demo-viewer',
+    name: 'Demo Viewer',
+    email: 'viewer@acme.com',
+    role: 'viewer',
+    image_url: '/customers/evil-rabbit.png',
+  },
+];
+
+export const invoices: Invoice[] = [
+  {
+    id: 'a1c30700-0000-4000-8000-000000000001',
+    customer_id: customers[0].id,
+    amount: 15795,
+    status: 'pending',
+    date: '2022-12-06',
+  },
+  {
+    id: 'a1c30700-0000-4000-8000-000000000002',
+    customer_id: customers[1].id,
+    amount: 20348,
+    status: 'pending',
+    date: '2022-11-14',
+  },
+  {
+    id: 'a1c30700-0000-4000-8000-000000000003',
+    customer_id: customers[4].id,
+    amount: 3040,
+    status: 'paid',
+    date: '2022-10-29',
+  },
+  {
+    id: 'a1c30700-0000-4000-8000-000000000004',
+    customer_id: customers[3].id,
+    amount: 44800,
+    status: 'paid',
+    date: '2023-09-10',
+  },
+  {
+    id: 'a1c30700-0000-4000-8000-000000000005',
+    customer_id: customers[5].id,
+    amount: 34577,
+    status: 'pending',
+    date: '2023-08-05',
+  },
+  {
+    id: 'a1c30700-0000-4000-8000-000000000006',
+    customer_id: customers[2].id,
+    amount: 54246,
+    status: 'pending',
+    date: '2023-07-16',
+  },
+  {
+    id: 'a1c30700-0000-4000-8000-000000000007',
+    customer_id: customers[0].id,
+    amount: 666,
+    status: 'pending',
+    date: '2023-06-27',
+  },
+  {
+    id: 'a1c30700-0000-4000-8000-000000000008',
+    customer_id: customers[3].id,
+    amount: 32545,
+    status: 'paid',
+    date: '2023-06-09',
+  },
+  {
+    id: 'a1c30700-0000-4000-8000-000000000009',
+    customer_id: customers[4].id,
+    amount: 1250,
+    status: 'paid',
+    date: '2023-06-17',
+  },
+  {
+    id: 'a1c30700-0000-4000-8000-000000000010',
+    customer_id: customers[5].id,
+    amount: 8546,
+    status: 'paid',
+    date: '2023-06-07',
+  },
+  {
+    id: 'a1c30700-0000-4000-8000-000000000011',
+    customer_id: customers[1].id,
+    amount: 500,
+    status: 'paid',
+    date: '2023-08-19',
+  },
+  {
+    id: 'a1c30700-0000-4000-8000-000000000012',
+    customer_id: customers[5].id,
+    amount: 8945,
+    status: 'paid',
+    date: '2023-06-03',
+  },
+  {
+    id: 'a1c30700-0000-4000-8000-000000000013',
+    customer_id: customers[2].id,
+    amount: 1000,
+    status: 'paid',
+    date: '2022-06-05',
+  },
+];
+
+export const revenue: Revenue[] = [
+  { month: 'Jan', revenue: 2000 },
+  { month: 'Feb', revenue: 1800 },
+  { month: 'Mar', revenue: 2200 },
+  { month: 'Apr', revenue: 2500 },
+  { month: 'May', revenue: 2300 },
+  { month: 'Jun', revenue: 3200 },
+  { month: 'Jul', revenue: 3500 },
+  { month: 'Aug', revenue: 3700 },
+  { month: 'Sep', revenue: 2500 },
+  { month: 'Oct', revenue: 2800 },
+  { month: 'Nov', revenue: 3000 },
+  { month: 'Dec', revenue: 4800 },
+];
+
+export const dashboardStats: DashboardStats = {
+  totalCustomers: customers.length,
+  totalInvoices: invoices.length,
+  totalPaidInvoices: invoices.filter((invoice) => invoice.status === 'paid').length,
+  totalPendingInvoices: invoices.filter((invoice) => invoice.status === 'pending').length,
+  totalRevenue: revenue.reduce((sum, month) => sum + month.revenue, 0),
+};
