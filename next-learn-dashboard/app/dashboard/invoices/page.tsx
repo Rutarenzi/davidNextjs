@@ -4,6 +4,7 @@ import Search from '@/app/ui/search';
 import InvoicesTable from '@/app/ui/invoices/table';
 import { CreateInvoice } from '@/app/ui/invoices/buttons';
 import { lusitana } from '@/app/ui/fonts';
+import { redirect } from 'next/navigation';
 
 type PageProps = {
   searchParams?: {
@@ -14,11 +15,23 @@ type PageProps = {
 
 export default async function Page({ searchParams }: PageProps) {
   const query = searchParams?.query ?? '';
-  const currentPage = Number(searchParams?.page) || 1;
+  const requestedPage = Number(searchParams?.page);
+  const currentPage =
+    Number.isSafeInteger(requestedPage) && requestedPage > 0
+      ? requestedPage
+      : 1;
   const [invoices, totalPages] = await Promise.all([
     fetchFilteredInvoices(query, currentPage),
     fetchInvoicesPages(query),
   ]);
+  const boundedPage = Math.min(currentPage, Math.max(1, totalPages));
+
+  if (searchParams?.page && searchParams.page !== String(boundedPage)) {
+    const params = new URLSearchParams();
+    if (query) params.set('query', query);
+    params.set('page', String(boundedPage));
+    redirect(`/dashboard/invoices?${params.toString()}`);
+  }
 
   return (
     <main>

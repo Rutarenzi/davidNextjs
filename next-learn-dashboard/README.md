@@ -33,9 +33,17 @@ stop the server.
 ## Sign In
 
 Open `/` and select **Login**, or visit `/login` directly. In development, use
-any valid email address and a password with at least six characters. This is a
-development-only mock sign-in; it does not check or store passwords. Signed-out
-visits to dashboard routes redirect to the login page.
+one of the sample accounts:
+
+| Email             | Password    |
+| ----------------- | ----------- |
+| `demo@acme.com`   | `demo123`   |
+| `viewer@acme.com` | `viewer123` |
+
+This is a development-only mock sign-in. Passwords are hard-coded for the demo,
+are not stored in the user fixtures, and are not hashed. Signed-out visits to
+dashboard routes redirect to the login page. Use the dashboard's **Sign out**
+control to end the Auth.js session.
 
 Production sign-in is intentionally disabled until a real identity provider and
 persistent user store are configured. Do not deploy the mock login as real
@@ -68,9 +76,10 @@ link enters the protected dashboard flow.
 
 Invoice changes are kept in an in-memory server store. They are visible during
 the current server process, but can be lost after a restart and are not shared
-between multiple server instances. The original placeholder data is restored
-when the store is initialized again. No passwords or credentials are included
-in the sample data.
+between multiple server instances. `POST /seed` resets invoice records to the
+placeholder set in the current process only; `GET /seed` reports fixture counts
+without changing data. No passwords or credentials are included in the sample
+data.
 
 ## Project Commands
 

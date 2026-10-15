@@ -1,6 +1,12 @@
 import Link from 'next/link';
 import NavLinks from '@/app/ui/dashboard/nav-links';
 import AcmeLogo from '@/app/ui/acme-logo';
+import { signOut } from '@/auth';
+
+async function logout() {
+  'use server';
+  await signOut({ redirectTo: '/login' });
+}
 
 export default function SideNav() {
   return (
@@ -16,6 +22,14 @@ export default function SideNav() {
       <div className="flex grow flex-row justify-between space-x-2 md:flex-col md:space-x-0 md:space-y-2">
         <NavLinks />
         <div className="hidden h-auto w-full grow rounded-md bg-gray-50 md:block"></div>
+        <form action={logout}>
+          <button
+            type="submit"
+            className="flex h-[48px] w-full items-center justify-center rounded-md bg-gray-50 px-3 text-sm font-medium hover:bg-sky-100 hover:text-blue-600 md:justify-start"
+          >
+            Sign out
+          </button>
+        </form>
       </div>
     </div>
   );

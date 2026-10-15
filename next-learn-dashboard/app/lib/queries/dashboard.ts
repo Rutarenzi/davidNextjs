@@ -1,12 +1,10 @@
-import { dashboardStats, revenue } from '../placeholder-data';
+import { fetchDashboardStats, fetchRevenue } from '../data';
 import type { DashboardStats, Revenue } from '../definitions';
 
 export async function getDashboardStats(): Promise<DashboardStats> {
-  return {
-    ...dashboardStats,
-  };
+  return fetchDashboardStats();
 }
 
 export async function getRevenue(): Promise<Revenue[]> {
-  return revenue.map((item) => ({ ...item }));
+  return fetchRevenue();
 }

@@ -1,13 +1,13 @@
 import { NextResponse } from 'next/server';
 import { getUserByEmail } from '@/app/lib/queries';
-
-const DEMO_PASSWORD = 'demo123';
+import { verifyDemoCredentials } from '@/app/lib/demo-credentials';
 
 export async function GET() {
   return NextResponse.json({
     ok: true,
     mode: process.env.NODE_ENV,
-    message: 'Use the demo login form on /login. Only development mode is allowed.',
+    message:
+      'Use the demo login form on /login. Only development mode is allowed.',
   });
 }
 
@@ -28,7 +28,8 @@ export async function POST(request: Request) {
       password?: string;
     };
 
-    const email = typeof body.email === 'string' ? body.email.trim().toLowerCase() : '';
+    const email =
+      typeof body.email === 'string' ? body.email.trim().toLowerCase() : '';
     const password = typeof body.password === 'string' ? body.password : '';
 
     if (!email || !password) {
@@ -42,7 +43,7 @@ export async function POST(request: Request) {
     }
 
     const user = await getUserByEmail(email);
-    if (!user || password !== DEMO_PASSWORD) {
+    if (!user || !verifyDemoCredentials(email, password)) {
       return NextResponse.json(
         {
           ok: false,

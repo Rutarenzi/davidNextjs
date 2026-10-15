@@ -3,11 +3,7 @@ import Credentials from 'next-auth/providers/credentials';
 import { z } from 'zod';
 import { authConfig } from './auth.config';
 import { getUserByEmail } from '@/app/lib/queries';
-
-const DEMO_PASSWORDS: Record<string, string> = {
-  'demo@acme.com': 'demo123',
-  'viewer@acme.com': 'viewer123',
-};
+import { verifyDemoCredentials } from '@/app/lib/demo-credentials';
 
 export const { auth, signIn, signOut, handlers } = NextAuth({
   ...authConfig,
@@ -27,10 +23,9 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
 
         const email = parsedCredentials.data.email.toLowerCase();
         const password = parsedCredentials.data.password;
-        const expectedPassword = DEMO_PASSWORDS[email];
         const user = await getUserByEmail(email);
 
-        if (!user || !expectedPassword || password !== expectedPassword) {
+        if (!user || !verifyDemoCredentials(email, password)) {
           return null;
         }
 

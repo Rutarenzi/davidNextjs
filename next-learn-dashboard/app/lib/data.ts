@@ -2,6 +2,7 @@ import { randomUUID } from 'node:crypto';
 import { unstable_noStore as noStore } from 'next/cache';
 import type {
   CustomerField,
+  DashboardStats,
   FormattedCustomersTable,
   Invoice,
   InvoiceForm,
@@ -110,6 +111,21 @@ export async function fetchCardData() {
   };
 }
 
+export async function fetchDashboardStats(): Promise<DashboardStats> {
+  noStore();
+  return {
+    totalCustomers: customers.length,
+    totalInvoices: store.invoices.length,
+    totalPaidInvoices: store.invoices.filter(
+      (invoice) => invoice.status === 'paid',
+    ).length,
+    totalPendingInvoices: store.invoices.filter(
+      (invoice) => invoice.status === 'pending',
+    ).length,
+    totalRevenue: revenue.reduce((total, month) => total + month.revenue, 0),
+  };
+}
+
 export async function fetchInvoices(): Promise<InvoicesTable[]> {
   noStore();
   return getInvoiceRows();
@@ -119,13 +135,39 @@ export async function fetchFilteredInvoices(
   query: string,
   currentPage: number,
 ): Promise<InvoicesTable[]> {
+  return (await fetchInvoicePage(query, currentPage)).data;
+}
+
+export async function fetchInvoicePage(
+  query: string,
+  currentPage: number,
+  pageSize = INVOICES_PER_PAGE,
+): Promise<{
+  data: InvoicesTable[];
+  page: number;
+  limit: number;
+  total: number;
+  totalPages: number;
+}> {
   noStore();
   const invoices = getFilteredInvoices(query);
-  const lastPage = Math.max(1, Math.ceil(invoices.length / INVOICES_PER_PAGE));
-  const page = Math.min(Math.max(1, currentPage), lastPage);
-  const startIndex = (page - 1) * INVOICES_PER_PAGE;
+  const limit =
+    Number.isSafeInteger(pageSize) && pageSize > 0
+      ? pageSize
+      : INVOICES_PER_PAGE;
+  const totalPages = Math.ceil(invoices.length / limit);
+  const requestedPage =
+    Number.isSafeInteger(currentPage) && currentPage > 0 ? currentPage : 1;
+  const page = Math.min(requestedPage, Math.max(1, totalPages));
+  const startIndex = (page - 1) * limit;
 
-  return invoices.slice(startIndex, startIndex + INVOICES_PER_PAGE);
+  return {
+    data: invoices.slice(startIndex, startIndex + limit),
+    page,
+    limit,
+    total: invoices.length,
+    totalPages,
+  };
 }
 
 export async function fetchInvoicesPages(query: string): Promise<number> {
@@ -154,7 +196,9 @@ export async function fetchInvoiceById(
   };
 }
 
-export async function fetchCustomersTable(): Promise<FormattedCustomersTable[]> {
+export async function fetchCustomersTable(): Promise<
+  FormattedCustomersTable[]
+> {
   noStore();
   return customers.map((customer): FormattedCustomersTable => {
     const customerInvoices = store.invoices.filter(
@@ -190,10 +234,7 @@ export function createInvoiceRecord(input: InvoiceInput): boolean {
   return true;
 }
 
-export function updateInvoiceRecord(
-  id: string,
-  input: InvoiceInput,
-): boolean {
+export function updateInvoiceRecord(id: string, input: InvoiceInput): boolean {
   const invoice = store.invoices.find((item) => item.id === id);
 
   if (
@@ -213,4 +254,8 @@ export function deleteInvoiceRecord(id: string): boolean {
 
   store.invoices.splice(index, 1);
   return true;
+}
+
+export function resetInvoiceRecords(): void {
+  store.invoices = placeholderInvoices.map((invoice) => ({ ...invoice }));
 }

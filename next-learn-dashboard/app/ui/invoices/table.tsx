@@ -9,6 +9,14 @@ export default function InvoicesTable({
 }: {
   invoices: InvoiceRow[];
 }) {
+  if (invoices.length === 0) {
+    return (
+      <p className="mt-6 rounded-md bg-gray-50 p-6 text-center text-sm text-gray-600">
+        No invoices found.
+      </p>
+    );
+  }
+
   return (
     <div className="mt-6 flow-root">
       <div className="inline-block min-w-full align-middle">
